@@ -106,7 +106,9 @@ func (e *JobExecutor) execWithRetry(cmd []string) ([]byte, error) {
 
 	retryCount := 0
 	for backoff.Continue(b) {
+		fmt.Println("exec command", cmd)
 		out, err = e.exec(cmd)
+		fmt.Println("return command = ", string(out))
 		if err != nil {
 			if cmdErr, ok := err.(*CommandError); ok {
 				if cmdErr.IsExitError() {
@@ -166,10 +168,16 @@ func (e *JobExecutor) ExecPrepareCommand(cmd []string) ([]byte, error) {
 }
 
 func (e *JobExecutor) ExecOnly() ([]byte, error) {
+	fmt.Println("called ExecOnly")
 	if e.IsRunning() {
+		fmt.Println("isRunning")
 		return nil, fmt.Errorf("job: duplicate command error. command is already executed")
 	}
+	fmt.Println("is not running")
 	if !e.job.disabledCommandLog {
+		fmt.Println("enabled command log")
+		fmt.Println(strings.Join(append(e.command, e.args...), " "))
+	} else {
 		fmt.Println(strings.Join(append(e.command, e.args...), " "))
 	}
 	e.setIsRunning(true)

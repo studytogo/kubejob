@@ -369,6 +369,7 @@ func (j *Job) watchLoop(ctx context.Context, watcher watch.Interface) (e error) 
 							return err
 						}
 						if j.podRunningCallback != nil {
+							fmt.Println("pod status = ", pod.Status.Phase, "call PodRunningCallback")
 							if err := j.podRunningCallback(pod); err != nil {
 								return err
 							}
