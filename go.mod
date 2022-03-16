@@ -5,9 +5,8 @@ go 1.16
 require (
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/jessevdk/go-flags v1.4.0
-	github.com/k0kubun/pp v3.0.1+incompatible // indirect
+	github.com/k0kubun/pp/v3 v3.1.0
 	github.com/lestrrat-go/backoff v1.0.1
-	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/rs/xid v1.2.1
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect

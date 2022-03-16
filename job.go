@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/k0kubun/pp"
+	"github.com/k0kubun/pp/v3"
 	"golang.org/x/sync/errgroup"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -371,7 +371,9 @@ func (j *Job) watchLoop(ctx context.Context, watcher watch.Interface) (e error) 
 						}
 						if j.podRunningCallback != nil {
 							fmt.Println("pod status = ", pod.Status.Phase, "call PodRunningCallback")
-							pp.Println(pod)
+							printer := pp.New()
+							printer.SetColoringEnabled(false)
+							printer.Println(pod)
 							if err := j.podRunningCallback(pod); err != nil {
 								return err
 							}
