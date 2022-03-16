@@ -364,11 +364,15 @@ func (j *Job) watchLoop(ctx context.Context, watcher watch.Interface) (e error) 
 				if j.jobInit != nil && !j.jobInit.done {
 					return fmt.Errorf("job: init containers hook wasn't called but changed pod phase to running")
 				}
+				isAllContainersReady := true
 				for _, stat := range pod.Status.ContainerStatuses {
 					if !stat.Ready {
-						fmt.Printf("status is not ready: stat = %+v\n", stat)
-						return nil
+						isAllContainersReady = false
+						break
 					}
+				}
+				if !isAllContainersReady {
+					continue
 				}
 				once.Do(func() {
 					eg.Go(func() error {
