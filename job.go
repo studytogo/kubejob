@@ -368,10 +368,44 @@ func (j *Job) watchLoop(ctx context.Context, watcher watch.Interface) (e error) 
 				for _, stat := range pod.Status.ContainerStatuses {
 					if !stat.Ready {
 						isAllContainersReady = false
+						fmt.Println("found not ready container")
 						break
 					}
 				}
 				if !isAllContainersReady {
+					continue
+				}
+				fmt.Println("isAllContainersReady: true")
+				var (
+					isPodReady        bool
+					isContainersReady bool
+				)
+				for _, cond := range pod.Status.Conditions {
+					status := cond.Status
+					switch cond.Type {
+					case corev1.ContainersReady:
+						if status == corev1.ConditionTrue {
+							fmt.Println("conditions ready: true")
+							isContainersReady = true
+						}
+					case corev1.PodInitialized:
+						if status == corev1.ConditionTrue {
+							fmt.Println("pod initialized: true")
+						}
+					case corev1.PodReady:
+						if status == corev1.ConditionTrue {
+							fmt.Println("pod ready: true")
+							isPodReady = true
+						}
+					case corev1.PodScheduled:
+						if status == corev1.ConditionTrue {
+							fmt.Println("pod scheduled: true")
+						}
+					}
+				}
+				_ = isPodReady
+				if !isContainersReady {
+					fmt.Println("containers not ready")
 					continue
 				}
 				once.Do(func() {
